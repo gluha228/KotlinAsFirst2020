@@ -3,13 +3,9 @@
 package lesson2.task1
 
 import lesson1.task1.discriminant
+import lesson1.task1.sqr
 import kotlin.math.max
 import kotlin.math.sqrt
-
-// Урок 2: ветвления (здесь), логический тип (см. 2.2).
-// Максимальное количество баллов = 6
-// Рекомендуемое количество баллов = 5
-// Вместе с предыдущими уроками = 9/12
 
 /**
  * Пример
@@ -63,15 +59,23 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
 }
 
 /**
- * Простая (2 балла)
+ * Простая
  *
  * Мой возраст. Для заданного 0 < n < 200, рассматриваемого как возраст человека,
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
-fun ageDescription(age: Int): String = TODO()
+fun ageDescription(age: Int): String {
+    if (age%100>=10 && age%100<=14) return "$age лет"
+    return when (age%10) {
+        1 -> "$age год"
+        2, 3, 4 ->"$age года"
+        else -> return "$age лет"
+    }
+}
+
 
 /**
- * Простая (2 балла)
+ * Простая
  *
  * Путник двигался t1 часов со скоростью v1 км/час, затем t2 часов — со скоростью v2 км/час
  * и t3 часов — со скоростью v3 км/час.
@@ -81,10 +85,17 @@ fun timeForHalfWay(
     t1: Double, v1: Double,
     t2: Double, v2: Double,
     t3: Double, v3: Double
-): Double = TODO()
+): Double {
+    val distance = (t1 * v1 + t2 * v2 + t3 * v3) / 2
+    if (distance < t1 * v1) return distance / v1
+    val distance2 = distance - t1 * v1
+    if (distance2 < t2 * v2) return (distance2 / v2) + t1
+    val distance3 = distance2 - t2 * v2
+    return (distance3 / v3) + t1 +t2
+}
 
 /**
- * Простая (2 балла)
+ * Простая
  *
  * Нa шахматной доске стоят черный король и две белые ладьи (ладья бьет по горизонтали и вертикали).
  * Определить, не находится ли король под боем, а если есть угроза, то от кого именно.
@@ -96,10 +107,15 @@ fun whichRookThreatens(
     kingX: Int, kingY: Int,
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
-): Int = TODO()
+): Int {
+    if (((kingX == rookX1) || (kingY == rookY1)) && ((kingX == rookX2) || (kingY == rookY2))) return 3
+    if ((kingX == rookX1) || (kingY == rookY1)) return 1
+    if ((kingX == rookX2) || (kingY == rookY2)) return 2
+    return 0
+}
 
 /**
- * Простая (2 балла)
+ * Простая
  *
  * На шахматной доске стоят черный король и белые ладья и слон
  * (ладья бьет по горизонтали и вертикали, слон — по диагоналям).
@@ -108,28 +124,70 @@ fun whichRookThreatens(
  * и 3, если угроза есть и от ладьи и от слона.
  * Считать, что ладья и слон не могут загораживать друг друга.
  */
+
 fun rookOrBishopThreatens(
     kingX: Int, kingY: Int,
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
-): Int = TODO()
+): Int {
+    var rookThreaten = 0
+    var bishopThreaten = 0
+    if ((kingX == rookX) || (kingY == rookY)) {
+        rookThreaten = 1
+    }
+    if ((kingX + kingY == bishopX + bishopY) || (kingX - kingY == bishopX - bishopY)) {
+        bishopThreaten = 1
+    }
+    if ((rookThreaten == 1) && (bishopThreaten == 1)) return 3
+    if (rookThreaten == 1) return 1
+    if (bishopThreaten == 1) return 2
+    return 0
+}
 
 /**
- * Простая (2 балла)
+ * Простая
  *
  * Треугольник задан длинами своих сторон a, b, c.
  * Проверить, является ли данный треугольник остроугольным (вернуть 0),
  * прямоугольным (вернуть 1) или тупоугольным (вернуть 2).
  * Если такой треугольник не существует, вернуть -1.
  */
-fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
-
+fun triangleKind(a: Double, b: Double, c: Double): Int {
+    if (max(max(a, b), c) == a) {
+        if (a > b + c) return -1
+        if (sqr(a) == sqr(b) + sqr(c)) return 1
+        if (sqr(a) < sqr(b) + sqr(c)) return 0
+        if (sqr(a) > sqr(b) + sqr(c)) return 2
+    }
+    if (max(max(a, b), c) == b) {
+        if (b > a + c) return -1
+        if (sqr(b) == sqr(a) + sqr(c)) return 1
+        if (sqr(b) < sqr(a) + sqr(c)) return 0
+        if (sqr(b) > sqr(a) + sqr(c)) return 2
+    }
+    if (max(max(a, b), c) == c) {
+        if (c > b + a) return -1
+        if (sqr(c) == sqr(b) + sqr(a)) return 1
+        if (sqr(c) < sqr(b) + sqr(a)) return 0
+        if (sqr(c) > sqr(b) + sqr(a)) return 2
+    }
+    return 0
+}
 /**
- * Средняя (3 балла)
+ * Средняя
  *
  * Даны четыре точки на одной прямой: A, B, C и D.
  * Координаты точек a, b, c, d соответственно, b >= a, d >= c.
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = TODO()
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
+    if ((a < c) && (b < c)) return -1
+    if ((c < a) && (d < a)) return -1
+    if ((a >= c) && (a <= d) && (b >= d)) return d - a
+    if ((c >= a) && (c <= b) && (b <= d)) return b - c
+    if ((a >= c) && (a <= d) && (b <= d)) return b - a
+    if ((c >= a) && (c <= b) && (b >= d)) return d - c
+    if ((c >= a) && (c <= b) && (b <= d)) return b - c
+    return 228
+}

@@ -2,12 +2,9 @@
 
 package lesson3.task1
 
+import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.sqrt
-
-// Урок 3: циклы
-// Максимальное количество баллов = 9
-// Рекомендуемое количество баллов = 7
-// Вместе с предыдущими уроками = 16/21
 
 /**
  * Пример
@@ -65,39 +62,102 @@ fun digitCountInNumber(n: Int, m: Int): Int =
     }
 
 /**
- * Простая (2 балла)
+ * Простая
  *
  * Найти количество цифр в заданном числе n.
  * Например, число 1 содержит 1 цифру, 456 -- 3 цифры, 65536 -- 5 цифр.
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun digitNumber(n: Int): Int = TODO()
+fun digitNumber(n: Int): Int {
+    if (n < 10) return 1 else return 1 + digitNumber(n / 10)
+}
 
 /**
- * Простая (2 балла)
+ * Простая
  *
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = TODO()
+fun fib(n: Int): Int {
+    /* Рекурсивный никому не нужный вариант
+    if (n <= 2) return 1 else return fib(n-1) + fib(n-2)
+     */
+    var fib1 = 1
+    var fib2 = 1
+    var fib3 = 1
+    for (x in 1..n - 2) {
+        fib3 = fib2 + fib1
+        fib1 = fib2
+        fib2 = fib3
+    }
+    return fib3
+}
 
 /**
- * Простая (2 балла)
+ * Простая
+ *
+ * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
+ * минимальное число k, которое делится и на m и на n без остатка
+ */
+fun lcm(m: Int, n: Int): Int {
+    for (x in m..m * n) {
+        if (((x % m) == 0) && ((x % n) == 0)) return x
+    }
+    return 0
+}
+
+/**
+ * Простая
  *
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
-fun minDivisor(n: Int): Int = TODO()
+fun minDivisor(n: Int): Int {
+    for (x in 2..n) if ((n % x) == 0) return x
+    return 0
+}
 
 /**
- * Простая (2 балла)
+ * Простая
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int = TODO()
+fun maxDivisor(n: Int): Int {
+    for (x in n - 1 downTo 1) if ((n % x) == 0) return x
+    return 0
+}
 
 /**
- * Простая (2 балла)
+ * Простая
+ *
+ * Определить, являются ли два заданных числа m и n взаимно простыми.
+ * Взаимно простые числа не имеют общих делителей, кроме 1.
+ * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
+ */
+fun isCoPrime(m: Int, n: Int): Boolean {
+    var num1 = m
+    var num2 = n
+    while (num1 != num2) {
+        if (num1 > num2) num1 -= num2 else num2 -= num1
+    }
+    if (num1 == 1) return true
+    return false
+}
+
+/**
+ * Простая
+ *
+ * Для заданных чисел m и n, m <= n, определить, имеется ли хотя бы один точный квадрат между m и n,
+ * то есть, существует ли такое целое k, что m <= k*k <= n.
+ * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
+ */
+fun squareBetweenExists(m: Int, n: Int): Boolean {
+    for (x in (sqrt((m - 1).toDouble())).toInt()..(sqrt((n + 1).toDouble())).toInt()) if ((x * x >= m) && (x * x <= n)) return true
+    return false
+}
+
+/**
+ * Средняя
  *
  * Гипотеза Коллатца. Рекуррентная последовательность чисел задана следующим образом:
  *
@@ -112,66 +172,14 @@ fun maxDivisor(n: Int): Int = TODO()
  * Написать функцию, которая находит, сколько шагов требуется для
  * этого для какого-либо начального X > 0.
  */
-fun collatzSteps(x: Int): Int = TODO()
+fun collatzSteps(x: Int): Int {
+    if (x == 1) return 0
+    if ((x % 2) == 0) return 1 + collatzSteps(x / 2)
+    return 1 + collatzSteps(3 * x + 1)
+}
 
 /**
- * Средняя (3 балла)
- *
- * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
- * минимальное число k, которое делится и на m и на n без остатка
- */
-fun lcm(m: Int, n: Int): Int = TODO()
-
-/**
- * Средняя (3 балла)
- *
- * Определить, являются ли два заданных числа m и n взаимно простыми.
- * Взаимно простые числа не имеют общих делителей, кроме 1.
- * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
- */
-fun isCoPrime(m: Int, n: Int): Boolean = TODO()
-
-/**
- * Средняя (3 балла)
- *
- * Для заданных чисел m и n, m <= n, определить, имеется ли хотя бы один точный квадрат между m и n,
- * то есть, существует ли такое целое k, что m <= k*k <= n.
- * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
- */
-fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
-
-/**
- * Средняя (3 балла)
- *
- * Поменять порядок цифр заданного числа n на обратный: 13478 -> 87431.
- *
- * Использовать операции со строками в этой задаче запрещается.
- */
-fun revert(n: Int): Int = TODO()
-
-/**
- * Средняя (3 балла)
- *
- * Проверить, является ли заданное число n палиндромом:
- * первая цифра равна последней, вторая -- предпоследней и так далее.
- * 15751 -- палиндром, 3653 -- нет.
- *
- * Использовать операции со строками в этой задаче запрещается.
- */
-fun isPalindrome(n: Int): Boolean = TODO()
-
-/**
- * Средняя (3 балла)
- *
- * Для заданного числа n определить, содержит ли оно различающиеся цифры.
- * Например, 54 и 323 состоят из разных цифр, а 111 и 0 из одинаковых.
- *
- * Использовать операции со строками в этой задаче запрещается.
- */
-fun hasDifferentDigits(n: Int): Boolean = TODO()
-
-/**
- * Средняя (4 балла)
+ * Средняя
  *
  * Для заданного x рассчитать с заданной точностью eps
  * sin(x) = x - x^3 / 3! + x^5 / 5! - x^7 / 7! + ...
@@ -179,10 +187,23 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
-fun sin(x: Double, eps: Double): Double = TODO()
+fun sin(x1: Double, eps: Double): Double {
+    var x = x1
+    while (x > 2 * PI) x -= 2 * PI
+    var iteration = 1.0
+    var sin = 0.0
+    var lastAdded = x
+    while (abs(lastAdded) > eps) {
+        sin += lastAdded
+        iteration += 2
+        lastAdded *= x * x / (iteration * (1 - iteration))
+    }
+    sin += lastAdded
+    return sin
+}
 
 /**
- * Средняя (4 балла)
+ * Средняя
  *
  * Для заданного x рассчитать с заданной точностью eps
  * cos(x) = 1 - x^2 / 2! + x^4 / 4! - x^6 / 6! + ...
@@ -190,10 +211,72 @@ fun sin(x: Double, eps: Double): Double = TODO()
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
-fun cos(x: Double, eps: Double): Double = TODO()
+fun cos(x1: Double, eps: Double): Double {
+    var x = x1
+    while (x > 2 * PI) x -= 2 * PI
+    var iteration = 0.0
+    var cos = 0.0
+    var lastAdded = 1.0
+    while (abs(lastAdded) > eps) {
+        cos += lastAdded
+        iteration += 2
+        lastAdded *= x * x / (iteration * (1 - iteration))
+    }
+    cos += lastAdded
+    return cos
+}
+/**
+ * Средняя
+ *
+ * Поменять порядок цифр заданного числа n на обратный: 13478 -> 87431.
+ *
+ * Использовать операции со строками в этой задаче запрещается.
+ */
+fun revert(n1: Int): Int {
+    var revert = 0
+    var n = n1
+    while (n != 0) {
+        revert *= 10
+        revert += n % 10
+        n /= 10
+    }
+    return revert
+}
 
 /**
- * Сложная (4 балла)
+ * Средняя
+ *
+ * Проверить, является ли заданное число n палиндромом:
+ * первая цифра равна последней, вторая -- предпоследней и так далее.
+ * 15751 -- палиндром, 3653 -- нет.
+ *
+ * Использовать операции со строками в этой задаче запрещается.
+ */
+fun isPalindrome(n: Int): Boolean = when (n) {
+    revert(n) -> true
+    else -> false
+}
+/**
+ * Средняя
+ *
+ * Для заданного числа n определить, содержит ли оно различающиеся цифры.
+ * Например, 54 и 323 состоят из разных цифр, а 111 и 0 из одинаковых.
+ *
+ * Использовать операции со строками в этой задаче запрещается.
+ */
+fun hasDifferentDigits(n1: Int): Boolean {
+    var n = n1
+    val lastNumber = n % 10
+    n /= 10
+    while (n != 0) {
+        if ((n % 10) != lastNumber) return true
+        n /= 10
+    }
+    return false
+}
+
+/**
+ * Сложная
  *
  * Найти n-ю цифру последовательности из квадратов целых чисел:
  * 149162536496481100121144...
@@ -201,10 +284,22 @@ fun cos(x: Double, eps: Double): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n1: Int): Int {
+    var n = n1
+    var currentSquareOf = 0
+    var currentSquare: Int
+    while (true) {
+        currentSquareOf += 1
+        currentSquare = revert((currentSquareOf * currentSquareOf * 10) + 1)
+        while (currentSquare >= 10) {
+            if (n == 1) return currentSquare % 10 else n -= 1
+            currentSquare /= 10
+        }
+    }
+}
 
 /**
- * Сложная (5 баллов)
+ * Сложная
  *
  * Найти n-ю цифру последовательности из чисел Фибоначчи (см. функцию fib выше):
  * 1123581321345589144...
@@ -212,4 +307,21 @@ fun squareSequenceDigit(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n1: Int): Int {
+    var n = n1
+    if ((n == 1) || (n == 2)) return 1
+    n -= 2
+    var fib1 = 1
+    var fib2 = 1
+    var currentFibNum: Int
+    while (true) {
+        currentFibNum = fib1 + fib2
+        fib1 = fib2
+        fib2 = currentFibNum
+        currentFibNum = revert((fib2 * 10) + 1)     //разворачиваю число и приписываю слева 1, чтобы не потерять ведущие нули
+        while (currentFibNum >= 10) {
+            if (n == 1) return currentFibNum % 10 else n -= 1
+            currentFibNum /= 10
+        }
+    }
+}
