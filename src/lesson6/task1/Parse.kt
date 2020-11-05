@@ -275,7 +275,7 @@ fun computeDeviceCells(cells: Int, commandds: String, limit: Int): List<Int> {
     var command = -1
     var complete = 0
     for (chars in commandds) {
-        if (chars !in listOf('>', '<', '+', '-', '[', ']')) throw IllegalArgumentException()
+        if (chars !in listOf('>', '<', '+', '-', '[', ']', ' ')) throw IllegalArgumentException()
         if (chars == '[') complete += 1
         if (chars == ']') complete -= 1
         if (complete < 0) throw IllegalArgumentException()
