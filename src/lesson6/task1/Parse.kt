@@ -47,7 +47,7 @@ fun timeSecondsToStr(seconds: Int): String {
 /**
  * Пример: консольный ввод
  */
-fun main() {
+fun main2() {
     println("Введите время в формате ЧЧ:ММ:СС")
     val line = readLine()
     if (line != null) {
@@ -74,7 +74,60 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    val parts = str.split(" ")
+    try {
+        val day = parts[0].toInt()
+        val year = parts[2].toInt()
+        if (day !in 1..31) return ""
+        var month = ""
+        when (parts[1]) {
+            "января" -> {
+                month = "01"
+            }
+            "феваля" -> {
+                month = "02"
+                if (day !in 1..29) return ""
+            }
+            "марта" -> {
+                month = "03"
+            }
+            "апреля" -> {
+                month = "04"
+            }
+            "мая" -> {
+                month = "05"
+            }
+            "июня" -> {
+                month = "06"
+            }
+            "июля" -> {
+                month = "07"
+            }
+            "августа" -> {
+                month = "08"
+            }
+            "сентября" -> {
+                month = "09"
+            }
+            "октября" -> {
+                month = "10"
+            }
+            "ноября" -> {
+                month = "11"
+            }
+            "декабря" -> {
+                month = "12"
+            }
+            else -> return ""
+        }
+        return "${twoDigitStr(day)}.$month.$year"
+    } catch (e: NumberFormatException) {
+        return ""
+    } catch (o: IndexOutOfBoundsException) {
+        return ""
+    }
+}
 
 /**
  * Средняя (4 балла)
@@ -213,4 +266,65 @@ fun fromRoman(roman: String): Int = TODO()
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+fun computeDeviceCells(cells: Int, commandds: String, limit: Int): List<Int> {
+    val cellsValues = mutableListOf(0)
+    var limited = limit
+    val commands = "$commandds~"
+    for (place in 1 until cells) cellsValues.add(0)
+    var position = cells / 2
+    var command = -1
+    var complete = 0
+    for (chars in commandds) {
+        if (chars !in listOf('>', '<', '+', '-', '[', ']')) throw IllegalArgumentException()
+        if (chars == '[') complete += 1
+        if (chars == ']') complete -= 1
+        if (complete < 0) throw IllegalArgumentException()
+    }
+    if (complete != 0) throw IllegalArgumentException()
+    fun catchPair(initialValueSign: Int, initialCommandPos: Int): Int {
+        var currentValue = initialValueSign
+        var currentPos = initialCommandPos
+        while (currentValue != 0) {
+            currentPos += initialValueSign
+            if (commands[currentPos] == ']') {
+                currentValue -= 1
+            } else if (commands[currentPos] == '[') {
+                currentValue += 1
+            }
+        }
+        return currentPos
+    }
+    while (complete == 0) {
+        command += 1
+        limited -= 1
+        if (limited < 0) return cellsValues
+        val m = commands[command]
+        when (m) {
+            '>' -> {
+                position += 1
+                if (position !in 0 until cells) throw IllegalStateException()
+            }
+            '<' -> {
+                position -= 1
+                if (position !in 0 until cells) throw IllegalStateException()
+            }
+            '+' -> cellsValues[position] += 1
+            '-' -> cellsValues[position] -= 1
+            '~' -> complete = 1
+            else -> {
+                if ((m == '[') and (cellsValues[position] == 0)) {
+                    command = catchPair(1, command)
+                } else if ((m == ']') and (cellsValues[position] != 0)) {
+                    command = catchPair(-1, command)
+                }
+            }
+        }
+    }
+    return cellsValues
+}
+
+fun main() {
+    //println(computeDeviceCells(10, "===", 3))
+    //println(computeDeviceCells(10, "+>+>[+>", 3))
+    //println(computeDeviceCells(20, ">>>>>>>>>>>>>", 12))
+}
