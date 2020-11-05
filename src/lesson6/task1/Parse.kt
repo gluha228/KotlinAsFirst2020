@@ -2,6 +2,8 @@
 
 package lesson6.task1
 
+import ru.spbstu.wheels.product
+
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -80,7 +82,7 @@ fun dateStrToDigit(str: String): String {
         val day = parts[0].toInt()
         val year = parts[2].toInt()
         if (day !in 1..31) return ""
-        var month = ""
+        val month: String
         when (parts[1]) {
             "января" -> {
                 month = "01"
@@ -202,7 +204,13 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    val words = str.split(" ")
+    for (index in 0 until words.size - 1)
+        if (words[index].toUpperCase() == words[index + 1].toUpperCase())
+            return str.indexOf("${words[index]} ${words[index + 1]}")
+    return -1
+}
 
 /**
  * Сложная (6 баллов)
@@ -215,7 +223,25 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше нуля либо равны нулю.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    if (description.length < 2) return ""
+    val products = description.split(" ", "; ")
+    var currentPrice: Double
+    var mostExpensive = ""
+    var maxPrice = 0.0
+    try {
+        for (index in 1..products.size step 2) {
+            currentPrice = products[index].toDouble()
+            if (currentPrice > maxPrice) {
+                maxPrice = currentPrice
+                mostExpensive = products[index - 1]
+            }
+        }
+    } catch (e: NumberFormatException) {
+        return ""
+    }
+    return mostExpensive
+}
 
 /**
  * Сложная (6 баллов)
@@ -324,7 +350,7 @@ fun computeDeviceCells(cells: Int, commandds: String, limit: Int): List<Int> {
 }
 
 fun main() {
-    //println(computeDeviceCells(10, "===", 3))
+    println(mostExpensive("Хлеб 39.9; Молоко 62.5; Курица 184.0; Конфеты 89.9"))
     //println(computeDeviceCells(10, "+>+>[+>", 3))
     //println(computeDeviceCells(20, ">>>>>>>>>>>>>", 12))
 }
