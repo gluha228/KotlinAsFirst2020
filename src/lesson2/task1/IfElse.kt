@@ -65,11 +65,11 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
 fun ageDescription(age: Int): String {
-    if (age%100>=10 && age%100<=14) return "$age лет"
-    return when (age%10) {
+    if (age % 100 in 10..14) return "$age лет"
+    return when (age % 10) {
         1 -> "$age год"
-        2, 3, 4 ->"$age года"
-        else -> return "$age лет"
+        2, 3, 4 -> "$age года"
+        else -> "$age лет"
     }
 }
 
@@ -108,10 +108,10 @@ fun whichRookThreatens(
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
 ): Int {
-    if (((kingX == rookX1) || (kingY == rookY1)) && ((kingX == rookX2) || (kingY == rookY2))) return 3
-    if ((kingX == rookX1) || (kingY == rookY1)) return 1
-    if ((kingX == rookX2) || (kingY == rookY2)) return 2
-    return 0
+    return if (((kingX == rookX1) || (kingY == rookY1)) && ((kingX == rookX2) || (kingY == rookY2))) 3
+    else if ((kingX == rookX1) || (kingY == rookY1)) 1
+    else if ((kingX == rookX2) || (kingY == rookY2)) 2
+    else 0
 }
 
 /**
@@ -138,10 +138,10 @@ fun rookOrBishopThreatens(
     if ((kingX + kingY == bishopX + bishopY) || (kingX - kingY == bishopX - bishopY)) {
         bishopThreaten = 1
     }
-    if ((rookThreaten == 1) && (bishopThreaten == 1)) return 3
-    if (rookThreaten == 1) return 1
-    if (bishopThreaten == 1) return 2
-    return 0
+    return if ((rookThreaten == 1) && (bishopThreaten == 1)) 3
+    else if (rookThreaten == 1) 1
+    else if (bishopThreaten == 1) 2
+    else 0
 }
 
 /**
@@ -153,19 +153,19 @@ fun rookOrBishopThreatens(
  * Если такой треугольник не существует, вернуть -1.
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
-    if (max(max(a, b), c) == a) {
+    if (maxOf(a, b, c) == a) {
         if (a > b + c) return -1
         if (sqr(a) == sqr(b) + sqr(c)) return 1
         if (sqr(a) < sqr(b) + sqr(c)) return 0
         if (sqr(a) > sqr(b) + sqr(c)) return 2
     }
-    if (max(max(a, b), c) == b) {
+    if (maxOf(a, b, c) == b) {
         if (b > a + c) return -1
         if (sqr(b) == sqr(a) + sqr(c)) return 1
         if (sqr(b) < sqr(a) + sqr(c)) return 0
         if (sqr(b) > sqr(a) + sqr(c)) return 2
     }
-    if (max(max(a, b), c) == c) {
+    if (maxOf(a, b, c) == c) {
         if (c > b + a) return -1
         if (sqr(c) == sqr(b) + sqr(a)) return 1
         if (sqr(c) < sqr(b) + sqr(a)) return 0
@@ -182,12 +182,12 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Если пересечения нет, вернуть -1.
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    if ((a < c) && (b < c)) return -1
-    if ((c < a) && (d < a)) return -1
-    if ((a >= c) && (a <= d) && (b >= d)) return d - a
-    if ((c >= a) && (c <= b) && (b <= d)) return b - c
-    if ((a >= c) && (a <= d) && (b <= d)) return b - a
-    if ((c >= a) && (c <= b) && (b >= d)) return d - c
-    if ((c >= a) && (c <= b) && (b <= d)) return b - c
-    return 228
+    return if ((a < c) && (b < c)) -1
+    else if ((c < a) && (d < a)) -1
+    else if ((a >= c) && (a <= d) && (b >= d)) d - a
+    else if ((c >= a) && (c <= b) && (b <= d)) b - c
+    else if ((a >= c) && (a <= d) && (b <= d)) b - a
+    else if ((c >= a) && (c <= b) && (b >= d)) d - c
+    else if ((c >= a) && (c <= b) && (b <= d)) b - c
+    else -1
 }

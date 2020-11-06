@@ -2,6 +2,7 @@
 
 package lesson3.task1
 
+import lesson1.task1.sqr
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sqrt
@@ -69,9 +70,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun digitNumber(n: Int): Int {
-    if (n < 10) return 1 else return 1 + digitNumber(n / 10)
-}
+fun digitNumber(n: Int): Int = if (abs(n) < 10) 1 else 1 + digitNumber(n / 10)
 
 /**
  * Простая
@@ -101,10 +100,12 @@ fun fib(n: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    for (x in m..m * n) {
-        if (((x % m) == 0) && ((x % n) == 0)) return x
-    }
-    return 0
+    var num1 = m
+    var num2 = n
+    while (num1 != num2)
+        if (num1 < num2) num2 -= num1
+        else num1 -= num2
+    return n * m / num2
 }
 
 /**
@@ -113,8 +114,8 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    for (x in 2..n) if ((n % x) == 0) return x
-    return 0
+    for (x in 2..(n / 2)) if ((n % x) == 0) return x
+    return n
 }
 
 /**
@@ -122,10 +123,7 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int {
-    for (x in n - 1 downTo 1) if ((n % x) == 0) return x
-    return 0
-}
+fun maxDivisor(n: Int): Int = n / minDivisor(n)
 
 /**
  * Простая
@@ -138,10 +136,10 @@ fun isCoPrime(m: Int, n: Int): Boolean {
     var num1 = m
     var num2 = n
     while (num1 != num2) {
-        if (num1 > num2) num1 -= num2 else num2 -= num1
+        if (num1 > num2) num1 -= num2
+        else num2 -= num1
     }
-    if (num1 == 1) return true
-    return false
+    return num1 == 1
 }
 
 /**
@@ -152,10 +150,9 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    for (x in (sqrt((m - 1).toDouble())).toInt()..(sqrt((n + 1).toDouble())).toInt()) if ((x * x >= m) && (x * x <= n)) return true
+    for (x in m..n) if (sqr(sqrt(x.toDouble()).toInt()) == x) return true
     return false
 }
-
 /**
  * Средняя
  *
@@ -188,8 +185,7 @@ fun collatzSteps(x: Int): Int {
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
 fun sin(x1: Double, eps: Double): Double {
-    var x = x1
-    while (x > 2 * PI) x -= 2 * PI
+    val x = x1 % (2 * PI)
     var iteration = 1.0
     var sin = 0.0
     var lastAdded = x
@@ -212,8 +208,7 @@ fun sin(x1: Double, eps: Double): Double {
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
 fun cos(x1: Double, eps: Double): Double {
-    var x = x1
-    while (x > 2 * PI) x -= 2 * PI
+    val x = x1 % (2 * PI)
     var iteration = 0.0
     var cos = 0.0
     var lastAdded = 1.0
@@ -225,6 +220,7 @@ fun cos(x1: Double, eps: Double): Double {
     cos += lastAdded
     return cos
 }
+
 /**
  * Средняя
  *
@@ -252,10 +248,8 @@ fun revert(n1: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean = when (n) {
-    revert(n) -> true
-    else -> false
-}
+fun isPalindrome(n: Int): Boolean = (n == revert(n))
+
 /**
  * Средняя
  *
@@ -284,15 +278,27 @@ fun hasDifferentDigits(n1: Int): Boolean {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n1: Int): Int {
+fun revertLong(n1: Long): Long { //вспомогательная функция для двух следующих задач
+    var revert: Long = 0
     var n = n1
-    var currentSquareOf = 0
-    var currentSquare: Int
+    while (n > 0) {
+        revert *= 10
+        revert += n % 10
+        n /= 10
+    }
+    return revert
+}
+
+fun squareSequenceDigit(n1: Int): Int {
+
+    var n = n1
+    var currentSquareOf: Long = 0
+    var currentSquare: Long
     while (true) {
         currentSquareOf += 1
-        currentSquare = revert((currentSquareOf * currentSquareOf * 10) + 1)
+        currentSquare = revertLong((currentSquareOf * currentSquareOf * 10) + 1)
         while (currentSquare >= 10) {
-            if (n == 1) return currentSquare % 10 else n -= 1
+            if (n == 1) return (currentSquare % 10).toInt() else n -= 1
             currentSquare /= 10
         }
     }
@@ -311,16 +317,18 @@ fun fibSequenceDigit(n1: Int): Int {
     var n = n1
     if ((n == 1) || (n == 2)) return 1
     n -= 2
-    var fib1 = 1
-    var fib2 = 1
-    var currentFibNum: Int
+    var fib1: Long = 1
+    var fib2: Long = 1
+    var currentFibNum: Long
     while (true) {
         currentFibNum = fib1 + fib2
         fib1 = fib2
         fib2 = currentFibNum
-        currentFibNum = revert((fib2 * 10) + 1)     //разворачиваю число и приписываю слева 1, чтобы не потерять ведущие нули
+        currentFibNum =
+            revertLong((fib2 * 10) + 1)
+        //разворачиваю число и приписываю слева 1, чтобы не потерять ведущие нули
         while (currentFibNum >= 10) {
-            if (n == 1) return currentFibNum % 10 else n -= 1
+            if (n == 1) return (currentFibNum % 10).toInt() else n -= 1
             currentFibNum /= 10
         }
     }
