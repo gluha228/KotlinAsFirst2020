@@ -264,10 +264,11 @@ fun factorizeToString(n1: Int): String {
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
 fun convert(n: Int, base: Int): List<Int> {
-    if (n == 0) return listOf()
-    return convert(n / base, base) + listOf(n % base)
+    if ((n == 0) && (base > 0)) return listOf(0)
+    if (base > 0) return convert(n, -base)
+    return if (n == 0) listOf()
+    else convert(-n / base, base) + listOf(n % base)
 }
-
 /**
  * Сложная
  *
@@ -403,6 +404,7 @@ fun russianOverThousand(n1: Int): String {
     }
 
     when (n % 100) {
+        10 -> return str + "десять тысяч "
         11 -> return str + "одиннадцать тысяч "
         12 -> return str + "двенадцать тысяч "
         13 -> return str + "тринадцать тысяч "
@@ -456,6 +458,7 @@ fun russianUnderThousand(n1: Int): String {
     n %= 100
 
     when (n) {
+        10 -> return str + "десять"
         11 -> return str + "одиннадцать"
         12 -> return str + "двенадцать"
         13 -> return str + "тринадцать"

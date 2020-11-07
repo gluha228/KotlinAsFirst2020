@@ -163,25 +163,20 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.toSet().int
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
-    val merged = mutableMapOf<String, MutableSet<String>>()
-    val mergedNormally = mapA.toMutableMap()
-    for ((s1, s2) in mapA) {
-        merged[s1] = mutableSetOf(s2)
-    }
-    for ((s1, s2) in mapB) {
-        when {
-            (mapA[s1] == null) -> {
-                merged[s1] = mutableSetOf(s2)
-                mergedNormally[s1] = s2
-                break
-            }
-            (!(merged[s1]?.contains(mapB[s1]))!!) -> {
-                mapB[s1]?.let { merged[s1]?.add(it) }
-                mergedNormally[s1] += ", ${mapB[s1]}"
-            }
-        }
-    }
-    return mergedNormally
+    val merged = mapA.toMutableMap()
+    for ((s1, s2) in mapB)
+        if (s1 !in mapA) merged[s1] = s2
+        else if (!(mapA[s1]?.contains(s2))!!) merged[s1] += ", $s2"
+    return merged
+}
+
+fun main() {
+    println(
+        mergePhoneBooks(
+            mapOf("K" to "jX-b:!kR75\"c_SgTbf,b5", "a" to "JF"),
+            mapOf("K" to "jX-b:!kR75\"c_SgTbf,b5")
+        )
+    )
 }
 
 /**
@@ -250,7 +245,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-    if (chars.isEmpty()) return false
+    if ((chars.isEmpty()) && (word != "")) return false
     for (symbol in chars) {
         if (!word.contains(symbol)) return false
     }
@@ -365,11 +360,11 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
 }
 
 
-fun main() {
+/*fun main() {
     println(propagateHandshakes(mapOf("Marat" to setOf("Sveta"), "Sveta" to setOf("Mikhail"))))
     println("***")
     println(mapOf("Marat" to setOf("Mikhail", "Sveta"), "Sveta" to setOf("Mikhail"), "Mikhail" to setOf()))
-}
+}*/
 
 /**
  * Сложная (6 баллов)
@@ -417,7 +412,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *   ) -> emptySet()
  */
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
-    var bestComplect = mutableSetOf<String>()
+    /*var bestComplect = mutableSetOf<String>()
     var maxPrice = 0
     fun backPacking(ungotTreasures: Map<String, Pair<Int, Int>>, capacity: Int, totalPrice: Int) {
         if (totalPrice > maxPrice) {
@@ -432,6 +427,85 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         )
     }
     backPacking(treasures, capacity, 0)
-    return bestComplect
+    return bestComplect*/
+    val bestComplect = mutableMapOf<Int, List<String>>()
+    val bestForLostCapacity = mutableMapOf<Int, Int>()
+    var maxprice = 0
+    fun backPacking(ungotTresures: List<String>, lostCapacity: Int, totalPrice: Int) {
+        if (lostCapacity !in bestForLostCapacity) {
+            bestForLostCapacity[lostCapacity] = totalPrice
+            bestComplect[totalPrice] = ungotTresures
+            if (totalPrice > maxprice) maxprice = totalPrice
+        } else if (bestForLostCapacity[lostCapacity]!! >= totalPrice) return
+        else {
+            bestForLostCapacity[lostCapacity] = totalPrice
+            bestComplect[totalPrice] = ungotTresures
+            if (totalPrice > maxprice) maxprice = totalPrice
+        }
+        for (elements in ungotTresures) if ((lostCapacity - (treasures[elements]?.first!!)) >= 0)
+            backPacking(
+                ungotTresures - elements,
+                lostCapacity - (treasures[elements]?.first!!),
+                totalPrice + (treasures[elements]?.second!!)
+            )
+    }
+    backPacking(treasures.keys.toList(), capacity, 0)
+    return treasures.keys - (bestComplect[maxprice]?.toSet()!!)
 }
-
+/*
+fun main() {
+    println(
+        bagPacking(
+            mapOf(
+                "1" to (33 to 655),
+                "2" to (893 to 342),
+                "3" to (185 to 297),
+                "4" to (592 to 841),
+                "5" to (753 to 335),
+                "6" to (809 to 528),
+                "7" to (566 to 271),
+                "8" to (441 to 676),
+                "9" to (902 to 692),
+                "10" to (682 to 276),
+                "11" to (575 to 497),
+                "12" to (380 to 268),
+                "13" to (252 to 902),
+                "14" to (514 to 305),
+                "15" to (704 to 88),
+                "16" to (331 to 655),
+                "17" to (522 to 95),
+                "18" to (957 to 837),
+                "19" to (847 to 212),
+                "20" to (906 to 875),
+                "21" to (363 to 976),
+                "22" to (502 to 815),
+                "23" to (257 to 703),
+                "24" to (696 to 44),
+                "25" to (925 to 244),
+                "26" to (334 to 15),
+                "27" to (408 to 246),
+                "28" to (809 to 537),
+                "29" to (276 to 625),
+                "30" to (90 to 283),
+                "31" to (783 to 287),
+                "32" to (138 to 666),
+                "33" to (5 to 154),
+                "34" to (6 to 472),
+                "35" to (315 to 604),
+                "36" to (829 to 690),
+                "37" to (787 to 808),
+                "38" to (913 to 600),
+                "39" to (995 to 565),
+                "40" to (12 to 550),
+                "41" to (206 to 471),
+                "42" to (380 to 461),
+                "43" to (754 to 316),
+                "44" to (247 to 277),
+                "45" to (286 to 420),
+                "46" to (562 to 222),
+                "47" to (123 to 623)
+            ),
+            47000
+        )
+    )
+}*/

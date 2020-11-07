@@ -87,7 +87,7 @@ fun dateStrToDigit(str: String): String {
             "января" -> {
                 month = "01"
             }
-            "феваля" -> {
+            "февраля" -> {
                 month = "02"
                 if (day !in 1..29) return ""
             }
@@ -130,7 +130,9 @@ fun dateStrToDigit(str: String): String {
         return ""
     }
 }
-
+fun main() {
+    print(dateStrToDigit("01 февраля 1"))
+}
 /**
  * Средняя (4 балла)
  *
@@ -228,7 +230,7 @@ fun mostExpensive(description: String): String {
     val products = description.split(" ", "; ")
     var currentPrice: Double
     var mostExpensive = ""
-    var maxPrice = 0.0
+    var maxPrice = -999.0
     try {
         for (index in 1..products.size step 2) {
             currentPrice = products[index].toDouble()
@@ -349,7 +351,7 @@ fun computeDeviceCells(cells: Int, commandds: String, limit: Int): List<Int> {
     return cellsValues
 }
 
-fun main() {
+fun main3() {
     println(mostExpensive("Хлеб 39.9; Молоко 62.5; Курица 184.0; Конфеты 89.9"))
     //println(computeDeviceCells(10, "+>+>[+>", 3))
     //println(computeDeviceCells(20, ">>>>>>>>>>>>>", 12))
