@@ -99,14 +99,16 @@ fun fib(n: Int): Int {
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-fun lcm(m: Int, n: Int): Int {
-    var num1 = m
-    var num2 = n
-    while (num1 != num2)
-        if (num1 < num2) num2 -= num1
-        else num1 -= num2
-    return n * m / num2
+fun evklid(n: Int, m: Int): Int {
+    var num1 = n
+    var num2 = m
+    while (num1 != num2) {
+        if (num1 > num2) num1 -= num2
+        else num2 -= num1
+    }
+    return num1
 }
+fun lcm(m: Int, n: Int): Int = n * m / evklid(n, m)
 
 /**
  * Простая
@@ -132,15 +134,7 @@ fun maxDivisor(n: Int): Int = n / minDivisor(n)
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean {
-    var num1 = m
-    var num2 = n
-    while (num1 != num2) {
-        if (num1 > num2) num1 -= num2
-        else num2 -= num1
-    }
-    return num1 == 1
-}
+fun isCoPrime(m: Int, n: Int): Boolean = (evklid(m, n) == 1)
 
 /**
  * Простая
@@ -290,9 +284,8 @@ fun revertLong(n1: Long): Long { //вспомогательная функция
 }
 
 fun squareSequenceDigit(n1: Int): Int {
-
     var n = n1
-    var currentSquareOf: Long = 0
+    var currentSquareOf = 0L
     var currentSquare: Long
     while (true) {
         currentSquareOf += 1

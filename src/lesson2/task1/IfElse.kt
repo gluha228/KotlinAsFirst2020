@@ -91,7 +91,7 @@ fun timeForHalfWay(
     val distance2 = distance - t1 * v1
     if (distance2 < t2 * v2) return (distance2 / v2) + t1
     val distance3 = distance2 - t2 * v2
-    return (distance3 / v3) + t1 +t2
+    return (distance3 / v3) + t1 + t2
 }
 
 /**
@@ -107,12 +107,10 @@ fun whichRookThreatens(
     kingX: Int, kingY: Int,
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
-): Int {
-    return if (((kingX == rookX1) || (kingY == rookY1)) && ((kingX == rookX2) || (kingY == rookY2))) 3
-    else if ((kingX == rookX1) || (kingY == rookY1)) 1
-    else if ((kingX == rookX2) || (kingY == rookY2)) 2
-    else 0
-}
+): Int = if (((kingX == rookX1) || (kingY == rookY1)) && ((kingX == rookX2) || (kingY == rookY2))) 3
+else if ((kingX == rookX1) || (kingY == rookY1)) 1
+else if ((kingX == rookX2) || (kingY == rookY2)) 2
+else 0
 
 /**
  * Простая
@@ -130,17 +128,17 @@ fun rookOrBishopThreatens(
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
 ): Int {
-    var rookThreaten = 0
-    var bishopThreaten = 0
+    var rookThreaten = false
+    var bishopThreaten = false
     if ((kingX == rookX) || (kingY == rookY)) {
-        rookThreaten = 1
+        rookThreaten = true
     }
     if ((kingX + kingY == bishopX + bishopY) || (kingX - kingY == bishopX - bishopY)) {
-        bishopThreaten = 1
+        bishopThreaten = true
     }
-    return if ((rookThreaten == 1) && (bishopThreaten == 1)) 3
-    else if (rookThreaten == 1) 1
-    else if (bishopThreaten == 1) 2
+    return if (rookThreaten && bishopThreaten) 3
+    else if (rookThreaten) 1
+    else if (bishopThreaten) 2
     else 0
 }
 
@@ -153,26 +151,17 @@ fun rookOrBishopThreatens(
  * Если такой треугольник не существует, вернуть -1.
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
-    if (maxOf(a, b, c) == a) {
-        if (a > b + c) return -1
-        if (sqr(a) == sqr(b) + sqr(c)) return 1
-        if (sqr(a) < sqr(b) + sqr(c)) return 0
-        if (sqr(a) > sqr(b) + sqr(c)) return 2
+    val maxSide = maxOf(a, b, c)
+    val minSide = minOf(a, b, c)
+    val anotherSide = a + b + c - minSide - maxSide
+    return when {
+        (maxSide > minSide + anotherSide) -> -1
+        (sqr(maxSide) == sqr(minSide) + sqr(anotherSide)) -> 1
+        (sqr(maxSide) < sqr(minSide) + sqr(anotherSide)) -> 0
+        else -> 2
     }
-    if (maxOf(a, b, c) == b) {
-        if (b > a + c) return -1
-        if (sqr(b) == sqr(a) + sqr(c)) return 1
-        if (sqr(b) < sqr(a) + sqr(c)) return 0
-        if (sqr(b) > sqr(a) + sqr(c)) return 2
-    }
-    if (maxOf(a, b, c) == c) {
-        if (c > b + a) return -1
-        if (sqr(c) == sqr(b) + sqr(a)) return 1
-        if (sqr(c) < sqr(b) + sqr(a)) return 0
-        if (sqr(c) > sqr(b) + sqr(a)) return 2
-    }
-    return 0
 }
+
 /**
  * Средняя
  *
@@ -181,13 +170,12 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    return if ((a < c) && (b < c)) -1
-    else if ((c < a) && (d < a)) -1
-    else if ((a >= c) && (a <= d) && (b >= d)) d - a
-    else if ((c >= a) && (c <= b) && (b <= d)) b - c
-    else if ((a >= c) && (a <= d) && (b <= d)) b - a
-    else if ((c >= a) && (c <= b) && (b >= d)) d - c
-    else if ((c >= a) && (c <= b) && (b <= d)) b - c
-    else -1
-}
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = if ((a < c) && (b < c)) -1
+else if ((c < a) && (d < a)) -1
+else if ((a >= c) && (a <= d) && (b >= d)) d - a
+else if ((c >= a) && (c <= b) && (b <= d)) b - c
+else if ((a >= c) && (a <= d) && (b <= d)) b - a
+else if ((c >= a) && (c <= b) && (b >= d)) d - c
+else if ((c >= a) && (c <= b) && (b <= d)) b - c
+else -1
+
