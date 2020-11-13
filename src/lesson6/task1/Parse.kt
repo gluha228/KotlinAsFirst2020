@@ -234,6 +234,7 @@ fun mostExpensive(description: String): String {
     try {
         for (index in 1..products.size step 2) {
             currentPrice = products[index].toDouble()
+            if (currentPrice < 0) return ""
             if (currentPrice > maxPrice) {
                 maxPrice = currentPrice
                 mostExpensive = products[index - 1]

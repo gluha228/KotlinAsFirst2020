@@ -3,6 +3,7 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import java.lang.StringBuilder
 import kotlin.math.sqrt
 
 /**
@@ -208,19 +209,19 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
  */
 fun factorize(n1: Int): List<Int> {
     var n = n1
-    var flag: Int
+    var flag: Boolean
     val multiplierList: MutableList<Int> = mutableListOf()
     while (n != 1) {
-        flag = 0
+        flag = false
         for (i in 2..(n / 2)) {
             if ((n % i) == 0) {
                 multiplierList.add(i)
                 n /= i
-                flag = 1
+                flag = true
                 break
             }
         }
-        if (flag == 0) {
+        if (!flag) {
             multiplierList.add(n)
             n = 1
         }
@@ -235,27 +236,8 @@ fun factorize(n1: Int): List<Int> {
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  * Множители в результирующей строке должны располагаться по возрастанию.
  */
-fun factorizeToString(n1: Int): String {
-    var n = n1
-    var flag: Boolean
-    var multiplierStr = ""
-    while (n != 1) {
-        flag = true
-        for (i in 2..(n / 2)) {
-            if ((n % i) == 0) {
-                multiplierStr += "*$i"
-                n /= i
-                flag = false
-                break
-            }
-        }
-        if (flag) {
-            multiplierStr += "*$n"
-            n = 1
-        }
-    }
-    return multiplierStr.removeRange(0..0)
-}
+fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*")
+
 /**
  * Средняя
  *
@@ -284,13 +266,9 @@ fun convertToString(n: Int, base: Int): String {
     if (n == 0) return "0"
     val list = convert(n, base).toMutableList()
     var anotherCountSystem = ""
-    val alphabet = "abcdefghijklmnopqrstuvwxyz"
     for (i in 0 until list.size) {
-        if (list[i] in 0..9) {
-            anotherCountSystem += "${list[i]}"
-        } else {
-            anotherCountSystem += alphabet[list[i] - 10]
-        }
+        anotherCountSystem += if (list[i] in 0..9) "${list[i]}"
+        else 'a' + (list[i] - 10)
     }
     return anotherCountSystem
 }
@@ -319,14 +297,15 @@ fun decimal(digits: List<Int>, base: Int): Int = digits.fold(0) { initial, eleme
  * (например, str.toInt(base)), запрещается.
  */
 fun decimalFromString(str: String, base: Int): Int {
-    val alphabet = "0123456789abcdefghijklmnopqrstuvwxyz"
     val numberForm = mutableListOf<Int>()
-    for (element in str) {
-        numberForm += alphabet.indexOf(element)
-    }
+    for (element in str)
+        numberForm += if (element in '0'..'9') element.toUpperCase().hashCode() - 48
+        else element.toUpperCase().hashCode() - 55
     return decimal(numberForm, base)
 }
-
+fun main() {
+    for (x in '0'..'z') println("$x ${x.hashCode()}")
+}
 /**
  * Сложная
  *
@@ -337,47 +316,47 @@ fun decimalFromString(str: String, base: Int): Int {
  */
 fun roman(n1: Int): String {
     var n = n1
-    var str = ""
+    val str = StringBuilder()
     for (i in 1..(n / 1000)) {
-        str += "M"
+        str.append("M")
     }
     n %= 1000
     when (n / 100) {
-        1 -> str += "C"
-        2 -> str += "CC"
-        3 -> str += "CCC"
-        4 -> str += "CD"
-        5 -> str += "D"
-        6 -> str += "DC"
-        7 -> str += "DCC"
-        8 -> str += "DCCC"
-        9 -> str += "CM"
+        1 -> str.append("C")
+        2 -> str.append("CC")
+        3 -> str.append("CCC")
+        4 -> str.append("CD")
+        5 -> str.append("D")
+        6 -> str.append("DC")
+        7 -> str.append("DCC")
+        8 -> str.append("DCCC")
+        9 -> str.append("CM")
     }
     n %= 100
     when (n / 10) {
-        1 -> str += "X"
-        2 -> str += "XX"
-        3 -> str += "XXX"
-        4 -> str += "XL"
-        5 -> str += "L"
-        6 -> str += "LX"
-        7 -> str += "LXX"
-        8 -> str += "LXXX"
-        9 -> str += "XC"
+        1 -> str.append("X")
+        2 -> str.append("XX")
+        3 -> str.append("XXX")
+        4 -> str.append("XL")
+        5 -> str.append("L")
+        6 -> str.append("LX")
+        7 -> str.append("LXX")
+        8 -> str.append("LXXX")
+        9 -> str.append("XC")
     }
     n %= 10
     when (n) {
-        1 -> str += "I"
-        2 -> str += "II"
-        3 -> str += "III"
-        4 -> str += "IV"
-        5 -> str += "V"
-        6 -> str += "VI"
-        7 -> str += "VII"
-        8 -> str += "VIII"
-        9 -> str += "IX"
+        1 -> str.append("I")
+        2 -> str.append("II")
+        3 -> str.append("III")
+        4 -> str.append("IV")
+        5 -> str.append("V")
+        6 -> str.append("VI")
+        7 -> str.append("VII")
+        8 -> str.append("VIII")
+        9 -> str.append("IX")
     }
-    return str
+    return str.toString()
 }
 
 /**
@@ -390,107 +369,107 @@ fun roman(n1: Int): String {
 fun russianOverThousand(n1: Int): String {
     if (n1 == 0) return ""
     val n = n1
-    var str = ""
+    val str = StringBuilder()
     when (n / 100) {
-        1 -> str += "сто "
-        2 -> str += "двести "
-        3 -> str += "триста "
-        4 -> str += "четыреста "
-        5 -> str += "пятьсот "
-        6 -> str += "шестьсот "
-        7 -> str += "семьсот "
-        8 -> str += "восемьсот "
-        9 -> str += "девятьсот "
+        1 -> str.append("сто ")
+        2 -> str.append("двести ")
+        3 -> str.append("триста ")
+        4 -> str.append("четыреста ")
+        5 -> str.append("пятьсот ")
+        6 -> str.append("шестьсот ")
+        7 -> str.append("семьсот ")
+        8 -> str.append("восемьсот ")
+        9 -> str.append("девятьсот ")
     }
 
     when (n % 100) {
-        10 -> return str + "десять тысяч "
-        11 -> return str + "одиннадцать тысяч "
-        12 -> return str + "двенадцать тысяч "
-        13 -> return str + "тринадцать тысяч "
-        14 -> return str + "четырнадцать тысяч "
-        15 -> return str + "пятнадцать тысяч "
-        16 -> return str + "шестнадцать тысяч "
-        17 -> return str + "семнадцать тысяч "
-        18 -> return str + "восемнадцать тысяч "
-        19 -> return str + "девятнадцать тысяч "
+        10 -> return str.append("десять тысяч ").toString()
+        11 -> return str.append("одиннадцать тысяч ").toString()
+        12 -> return str.append("двенадцать тысяч ").toString()
+        13 -> return str.append("тринадцать тысяч ").toString()
+        14 -> return str.append("четырнадцать тысяч ").toString()
+        15 -> return str.append("пятнадцать тысяч ").toString()
+        16 -> return str.append("шестнадцать тысяч ").toString()
+        17 -> return str.append("семнадцать тысяч ").toString()
+        18 -> return str.append("восемнадцать тысяч ").toString()
+        19 -> return str.append("девятнадцать тысяч ").toString()
     }
     when ((n / 10) % 10) {
-        2 -> str += "двадцать "
-        3 -> str += "тридцать "
-        4 -> str += "сорок "
-        5 -> str += "пятьдесят "
-        6 -> str += "шестьдесят "
-        7 -> str += "семьдесят "
-        8 -> str += "восемьдесят "
-        9 -> str += "девяносто "
+        2 -> str.append("двадцать ")
+        3 -> str.append("тридцать ")
+        4 -> str.append("сорок ")
+        5 -> str.append("пятьдесят ")
+        6 -> str.append("шестьдесят ")
+        7 -> str.append("семьдесят ")
+        8 -> str.append("восемьдесят ")
+        9 -> str.append("девяносто ")
     }
     when (n % 10) {
-        1 -> str += "одна тысяча "
-        2 -> str += "две тысячи "
-        3 -> str += "три тысячи "
-        4 -> str += "четыре тысячи "
-        5 -> str += "пять тысяч "
-        6 -> str += "шесть тысяч "
-        7 -> str += "семь тысяч "
-        8 -> str += "восемь тысяч "
-        9 -> str += "девять тысяч "
-        0 -> str += "тысяч "
+        1 -> str.append("одна тысяча ")
+        2 -> str.append("две тысячи ")
+        3 -> str.append("три тысячи ")
+        4 -> str.append("четыре тысячи ")
+        5 -> str.append("пять тысяч ")
+        6 -> str.append("шесть тысяч ")
+        7 -> str.append("семь тысяч ")
+        8 -> str.append("восемь тысяч ")
+        9 -> str.append("девять тысяч ")
+        0 -> str.append("тысяч ")
     }
-    return str
+    return str.toString()
 }
 
 fun russianUnderThousand(n1: Int): String {
     if (n1 == 0) return ""
     var n = n1
-    var str = ""
+    val str = StringBuilder()
     when (n / 100) {
-        1 -> str += "сто "
-        2 -> str += "двести "
-        3 -> str += "триста "
-        4 -> str += "четыреста "
-        5 -> str += "пятьсот "
-        6 -> str += "шестьсот "
-        7 -> str += "семьсот "
-        8 -> str += "восемьсот "
-        9 -> str += "девятьсот "
+        1 -> str.append("сто ")
+        2 -> str.append("двести ")
+        3 -> str.append("триста ")
+        4 -> str.append("четыреста ")
+        5 -> str.append("пятьсот ")
+        6 -> str.append("шестьсот ")
+        7 -> str.append("семьсот ")
+        8 -> str.append("восемьсот ")
+        9 -> str.append("девятьсот ")
     }
     n %= 100
 
     when (n) {
-        10 -> return str + "десять"
-        11 -> return str + "одиннадцать"
-        12 -> return str + "двенадцать"
-        13 -> return str + "тринадцать"
-        14 -> return str + "четырнадцать"
-        15 -> return str + "пятнадцать"
-        16 -> return str + "шестнадцать"
-        17 -> return str + "семнадцать"
-        18 -> return str + "восемнадцать"
-        19 -> return str + "девятнадцать"
+        10 -> return str.append("десять").toString()
+        11 -> return str.append("одиннадцать").toString()
+        12 -> return str.append("двенадцать").toString()
+        13 -> return str.append("тринадцать").toString()
+        14 -> return str.append("четырнадцать").toString()
+        15 -> return str.append("пятнадцать").toString()
+        16 -> return str.append("шестнадцать").toString()
+        17 -> return str.append("семнадцать").toString()
+        18 -> return str.append("восемнадцать").toString()
+        19 -> return str.append("девятнадцать").toString()
     }
     when (n / 10) {
-        2 -> str += "двадцать "
-        3 -> str += "тридцать "
-        4 -> str += "сорок "
-        5 -> str += "пятьдесят "
-        6 -> str += "шестьдесят "
-        7 -> str += "семьдесят "
-        8 -> str += "восемьдесят "
-        9 -> str += "девяносто "
+        2 -> str.append("двадцать ")
+        3 -> str.append("тридцать ")
+        4 -> str.append("сорок ")
+        5 -> str.append("пятьдесят ")
+        6 -> str.append("шестьдесят ")
+        7 -> str.append("семьдесят ")
+        8 -> str.append("восемьдесят ")
+        9 -> str.append("девяносто ")
     }
     when (n % 10) {
-        1 -> str += "один"
-        2 -> str += "два"
-        3 -> str += "три"
-        4 -> str += "четыре"
-        5 -> str += "пять"
-        6 -> str += "шесть"
-        7 -> str += "семь"
-        8 -> str += "восемь"
-        9 -> str += "девять"
+        1 -> str.append("один")
+        2 -> str.append("два")
+        3 -> str.append("три")
+        4 -> str.append("четыре")
+        5 -> str.append("пять")
+        6 -> str.append("шесть")
+        7 -> str.append("семь")
+        8 -> str.append("восемь")
+        9 -> str.append("девять")
     }
-    return str
+    return str.toString()
 }
 
 fun russian(n: Int): String = (russianOverThousand(n / 1000) + russianUnderThousand(n % 1000)).trim(' ')
