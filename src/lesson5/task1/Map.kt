@@ -170,15 +170,6 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
     return merged
 }
 
-fun main() {
-    println(
-        mergePhoneBooks(
-            mapOf("K" to "jX-b:!kR75\"c_SgTbf,b5", "a" to "JF"),
-            mapOf("K" to "jX-b:!kR75\"c_SgTbf,b5")
-        )
-    )
-}
-
 /**
  * Средняя (4 балла)
  *
@@ -384,16 +375,14 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    /*for (firstPosition in list.indices)
+    for (firstPosition in list.indices)
         for (secondPosition in firstPosition + 1 until list.size) if ((list[firstPosition] + list[secondPosition]) == number)
             return Pair(firstPosition, secondPosition)
-    return Pair(-1, -1)*/
-    for (numbers in list)
-        if (list.contains(number - numbers) && list.indexOf(numbers) < list.indexOf(number - numbers))
-        return Pair(list.indexOf(numbers), list.indexOf(number - numbers))
     return Pair(-1, -1)
 }
-
+fun main() {
+    println(findSumOfTwo(listOf(0, 0), 0))
+}
 /**
  * Очень сложная (8 баллов)
  *
