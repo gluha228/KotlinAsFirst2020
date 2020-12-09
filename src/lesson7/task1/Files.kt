@@ -286,6 +286,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     val opened = mutableListOf('p')
     var skip = 0
+    var lastEmpty = 0
     writer.write("<html>")
     writer.newLine()
     writer.write("<body>")
@@ -294,12 +295,16 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     writer.newLine()
     for (string in File(inputName).readLines()) {
         if (string.isEmpty()) {
-            writer.write("</p>")
-            writer.newLine()
-            writer.write("<p>")
-            writer.newLine()
+            if (lastEmpty == 0) {
+                writer.write("</p>")
+                writer.newLine()
+                writer.write("<p>")
+                writer.newLine()
+                lastEmpty = 1
+            }
             continue
         }
+        lastEmpty = 0
         val strings = "$string||"
         for (pos in string.indices) {
             if (skip != 0) {
