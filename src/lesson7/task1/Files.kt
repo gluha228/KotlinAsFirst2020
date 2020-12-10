@@ -538,6 +538,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
 
     var currentLhv = lhv
     var interval: Int
+    var oldinterval :Int
     val initialInterval = DigitsNumber(lhv).second
     var minuInterval: Int
     val writer = File(outputName).bufferedWriter()
@@ -557,6 +558,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     currentLhv -= remain
     delimeter /= 10
     interval = initialInterval - DigitsNumber(delimeter).second
+    oldinterval = interval
     if (delimeter != 0) {
         for (i in 0..interval - DigitsNumber(currentLhv).second) writer.write(" ")
         writer.write("$currentLhv${(lhv / delimeter) % 10}")
@@ -571,9 +573,9 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         writer.write("-$remain")
         writer.newLine()
         if (remain == 0) {
-            minuInterval = interval - DigitsNumber(currentLhv).second + 1
+            minuInterval = oldinterval - DigitsNumber(currentLhv).second + 1
             for (i in 0..minuInterval) writer.write(" ")
-            for (i in 1..DigitsNumber(currentLhv).second) writer.write("-")
+            for (i in 1..DigitsNumber(currentLhv).second - oldinterval + interval) writer.write("-")
         } else {
             for (i in 0..minuInterval) writer.write(" ")
             for (i in 0..DigitsNumber(remain).second) writer.write("-")
@@ -585,6 +587,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             for (i in 0..interval - DigitsNumber(currentLhv).second + 1) writer.write(" ")
             writer.write("$currentLhv${(lhv / delimeter) % 10}")
             writer.newLine()
+            oldinterval = interval
             interval += 1
             currentLhv *= 10
             currentLhv += (lhv / delimeter) % 10
