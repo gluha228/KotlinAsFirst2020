@@ -526,6 +526,70 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  *
  */
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+    fun DigitsNumber(number: Int): Pair<Int, Int> {
+        var result1 = 1
+        var result2 = 1
+        while ((number / result1) >= 10) {
+            result1 *= 10
+            result2 += 1
+        }
+        return Pair(result1, result2)
+    }
+
+    var currentLhv = lhv
+    var interval: Int
+    val initialInterval = DigitsNumber(lhv).second
+    var minuInterval: Int
+    val writer = File(outputName).bufferedWriter()
+    writer.write(" $lhv | $rhv")
+    writer.newLine()
+    var remain: Int
+    var delimeter = DigitsNumber(currentLhv).first
+    if (lhv >= rhv) while (0 == ((lhv / delimeter) / rhv)) delimeter /= 10
+    currentLhv = lhv / delimeter
+    remain = (currentLhv / rhv) * rhv
+    writer.write("-$remain")
+    for (i in 0..initialInterval - DigitsNumber(remain).second + 2) writer.write(" ")
+    writer.write("${lhv / rhv}")
+    writer.newLine()
+    for (i in 0..DigitsNumber(remain).second) writer.write("-")
+    writer.newLine()
+    currentLhv -= remain
+    delimeter /= 10
+    interval = initialInterval - DigitsNumber(delimeter).second
+    if (delimeter != 0) {
+        for (i in 0..interval - DigitsNumber(currentLhv).second) writer.write(" ")
+        writer.write("$currentLhv${(lhv / delimeter) % 10}")
+        writer.newLine()
+        currentLhv *= 10
+        currentLhv += (lhv / delimeter) % 10
+    }
+    while (delimeter != 0) {
+        remain = (currentLhv / rhv) * rhv
+        minuInterval = interval - DigitsNumber(remain).second
+        for (i in 0..minuInterval) writer.write(" ")
+        writer.write("-$remain")
+        writer.newLine()
+        for (i in 0..minuInterval) writer.write(" ")
+        for (i in 0..DigitsNumber(remain).second) writer.write("-")
+        writer.newLine()
+        currentLhv -= remain
+        delimeter /= 10
+        if (delimeter != 0) {
+            for (i in 0..interval - DigitsNumber(currentLhv).second + 1) writer.write(" ")
+            writer.write("$currentLhv${(lhv / delimeter) % 10}")
+            writer.newLine()
+            interval += 1
+            currentLhv *= 10
+            currentLhv += (lhv / delimeter) % 10
+        }
+    }
+    for (i in 0..interval - DigitsNumber(currentLhv).second + 1) writer.write(" ")
+    writer.write("$currentLhv")
+    writer.newLine()
+    writer.close()
 }
 
+fun main() {
+    printDivisionProcess(22, 200, "")
+}
