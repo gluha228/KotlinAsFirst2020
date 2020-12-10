@@ -540,7 +540,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     var interval: Int
     val initialInterval = DigitsNumber(lhv).second
     var minuInterval: Int
-    val writer = File("C:/PABCWork.NET/output.txt").bufferedWriter()
+    val writer = File(outputName).bufferedWriter()
     writer.write(" $lhv | $rhv")
     writer.newLine()
     var remain: Int
@@ -570,9 +570,14 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         for (i in 0..minuInterval) writer.write(" ")
         writer.write("-$remain")
         writer.newLine()
-        minuInterval = interval - DigitsNumber(currentLhv).second + 1
-        for (i in 0..minuInterval) writer.write(" ")
-        for (i in 1..DigitsNumber(currentLhv).second) writer.write("-")
+        if (remain == 0) {
+            minuInterval = interval - DigitsNumber(currentLhv).second + 1
+            for (i in 0..minuInterval) writer.write(" ")
+            for (i in 1..DigitsNumber(currentLhv).second) writer.write("-")
+        } else {
+            for (i in 0..minuInterval) writer.write(" ")
+            for (i in 0..DigitsNumber(remain).second) writer.write("-")
+        }
         writer.newLine()
         currentLhv -= remain
         delimeter /= 10
