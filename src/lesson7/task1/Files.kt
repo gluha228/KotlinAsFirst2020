@@ -544,7 +544,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     var remain: Int
     var delimeter = DigitsNumber(currentLhv).first
-    if (!(((lhv / delimeter) == 1) && (rhv > (lhv / 2)))) correctingSpace = " "
+    if (!((lhv != rhv) && ((lhv / delimeter) == 1) && (rhv > (lhv / 2)))) correctingSpace = " "
     writer.write(correctingSpace)
     if (lhv >= rhv) while (0 == ((lhv / delimeter) / rhv)) delimeter /= 10
     currentLhv = lhv / delimeter
