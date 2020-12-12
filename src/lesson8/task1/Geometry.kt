@@ -239,7 +239,7 @@ fun minContainingCircle(vararg points: Point): Circle {
         (sqr(p2.x) + sqr(p2.y) - sqr(p3.x) - sqr(p3.y) - (p3.y - p2.y) * (sqr(p1.x) + sqr(p1.y) - sqr(p3.x) - sqr(p3.y)) / (p3.y - p1.y)) /
                 (-2 * (p3.x - p2.x - (p3.x - p1.x) * (p3.y - p2.y) / (p3.y - p1.y)))
     val y = ((sqr(p1.x) + sqr(p1.y) - sqr(p3.x) - sqr(p3.y)) / (-2) - x * (p3.x - p1.x)) / (p3.y - p1.y)
-    //формулы выведены из системы уравнений для трех точек и центра окружности
+    //формулы выведены из системы трех уравнений для точек и центра окружности
     return Circle(Point(x, y), dist(Point(x, y), p3))
 }
 fun main() {
