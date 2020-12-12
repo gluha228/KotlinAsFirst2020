@@ -538,11 +538,15 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
 
     var currentLhv = lhv
     var interval: Int
-    val initialInterval = DigitsNumber(lhv).second
+    var initialInterval = DigitsNumber(lhv).second
     var minuInterval: Int
     var correctingSpace = ""
     val writer = File(outputName).bufferedWriter()
     if (lhv < rhv) {
+        if (lhv < 10) {
+            writer.write(" ")
+            initialInterval += 1
+        }
         writer.write("$lhv | $rhv")
         writer.newLine()
         for (x in 2..initialInterval) writer.write(" ")
