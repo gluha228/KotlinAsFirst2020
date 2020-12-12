@@ -97,11 +97,11 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  *     -> mapOf(5 to listOf("Семён", "Михаил"), 3 to listOf("Марат"))
  */
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
-    val reBuild = mutableMapOf<Int, MutableList<String>>()
+    val reBuild = mutableMapOf<Int, MutableList<String>>(0 to mutableListOf())
     for ((name, grade) in grades) {
         if (reBuild[grade].isNullOrEmpty()) reBuild[grade] = mutableListOf(name) else reBuild[grade]?.add(name)
     }
-    return reBuild
+    return reBuild - 0
 }
 
 /**
@@ -166,7 +166,7 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
     val merged = mapA.toMutableMap()
     for ((s1, s2) in mapB)
         if (s1 !in mapA) merged[s1] = s2
-        else if (!(mapA[s1]?.contains(s2))!!) merged[s1] += ", $s2"
+        else if ((!(mapA[s1]?.contains(s2))!!) && (s2 != "")) merged[s1] += ", $s2"
     return merged
 }
 
@@ -214,7 +214,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *   ) -> "Мария"
  */
 fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
-    var mostCheapStuff = ""
+    var mostCheapStuff = "Александр Глушков"
     var minPrice = 9999999.0
     for ((name, productKind) in stuff) {
         if ((productKind.first == kind) && (productKind.second < minPrice)) {
@@ -222,7 +222,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
             mostCheapStuff = name
         }
     }
-    if (mostCheapStuff == "") return null
+    if (mostCheapStuff == "Александр Глушков") return null
     return mostCheapStuff
 }
 
@@ -237,6 +237,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     if ((chars.isEmpty()) && (word != "")) return false
+    if (word == "") return true
     for (symbol in chars) {
         if (!word.contains(symbol)) return false
     }
@@ -257,14 +258,13 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
 fun extractRepeats(list: List<String>): Map<String, Int> {
-    val firstAppearance = mutableSetOf<String>()
+    var repeat: Map<Any, List<String>>
+    val foundElement = mutableListOf("Александр Глушков")
     val repeats = mutableMapOf<String, Int>()
-    for (element in list) {
-        when {
-            (element in firstAppearance) && (repeats[element] == null) -> repeats[element] = 2
-            (element in firstAppearance) && (repeats[element] != null) -> repeats[element] = repeats[element]?.plus(1)!!
-            else -> firstAppearance.add(element)
-        }
+    for (element in list) if (element !in foundElement) {
+        repeat = list.groupBy { it.compareTo(element) }
+        foundElement.add(element)
+        if (repeat[0]?.size!! > 1) repeats[element] = repeat[0]?.size!!
     }
     return repeats
 }
@@ -375,14 +375,16 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    for (firstPosition in list.indices)
-        for (secondPosition in firstPosition + 1 until list.size) if ((list[firstPosition] + list[secondPosition]) == number)
-            return Pair(firstPosition, secondPosition)
+    for (position in 0 until list.size - 1)
+        if (list.contains(number - list[position]))
+            return Pair(position, (list - position).indexOf(number - list[position]))
     return Pair(-1, -1)
 }
+
 fun main() {
     println(findSumOfTwo(listOf(0, 0), 0))
 }
+
 /**
  * Очень сложная (8 баллов)
  *

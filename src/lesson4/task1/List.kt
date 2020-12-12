@@ -4,7 +4,7 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import java.lang.StringBuilder
-import kotlin.math.sqrt
+import kotlin.math.*
 
 /**
  * Пример
@@ -153,13 +153,8 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  * представленные в виде списков a и b. Скалярное произведение считать по формуле:
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.
  */
-fun times(a: List<Int>, b: List<Int>): Int {
-    var c = 0
-    for (i in 0 until (a.size)) {
-        c += a[i] * b[i]
-    }
-    return c
-}
+fun times(a: List<Int>, b: List<Int>): Int = a.indices.fold(0) { res, i -> res + a[i] * b[i] }
+
 
 /**
  * Средняя
@@ -169,15 +164,12 @@ fun times(a: List<Int>, b: List<Int>): Int {
  * Коэффициенты многочлена заданы списком p: (p0, p1, p2, p3, ..., pN).
  * Значение пустого многочлена равно 0 при любом x.
  */
-fun polynom(p: List<Int>, x: Int): Int {
-    var res = 0
-    var xPart = 1
-    for (i in 0 until (p.size)) {
-        res += p[i] * xPart
-        xPart *= x
-    }
-    return res
+fun pow(x: Int, y: Int): Int {
+    var m = 1
+    for (i in 1..y) m *= x
+    return m
 }
+fun polynom(p: List<Int>, x: Int): Int = p.indices.fold(0) { initial, i -> initial + p[i] * pow(x, i) }
 
 /**
  * Средняя
@@ -251,6 +243,7 @@ fun convert(n: Int, base: Int): List<Int> {
     return if (n == 0) listOf()
     else convert(-n / base, base) + listOf(n % base)
 }
+
 /**
  * Сложная
  *
@@ -299,13 +292,15 @@ fun decimal(digits: List<Int>, base: Int): Int = digits.fold(0) { initial, eleme
 fun decimalFromString(str: String, base: Int): Int {
     val numberForm = mutableListOf<Int>()
     for (element in str)
-        numberForm += if (element in '0'..'9') element.toUpperCase().hashCode() - 48
-        else element.toUpperCase().hashCode() - 55
+        numberForm += if (element in '0'..'9') element.toInt() - 48
+        else element.toUpperCase().toInt() - 55
     return decimal(numberForm, base)
 }
+
 fun main() {
     for (x in '0'..'z') println("$x ${x.hashCode()}")
 }
+
 /**
  * Сложная
  *

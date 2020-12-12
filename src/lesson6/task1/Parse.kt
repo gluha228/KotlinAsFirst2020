@@ -84,54 +84,31 @@ fun dateStrToDigit(str: String): String {
         if (day !in 1..31) return ""
         val month: String
         when (parts[1]) {
-            "января" -> {
-                month = "01"
-            }
+            "января" -> month = "01"
             "февраля" -> {
                 month = "02"
                 if (day !in 1..29) return ""
+                if ((day == 29) && (year % 4 != 0)) return ""
             }
-            "марта" -> {
-                month = "03"
-            }
-            "апреля" -> {
-                month = "04"
-            }
-            "мая" -> {
-                month = "05"
-            }
-            "июня" -> {
-                month = "06"
-            }
-            "июля" -> {
-                month = "07"
-            }
-            "августа" -> {
-                month = "08"
-            }
-            "сентября" -> {
-                month = "09"
-            }
-            "октября" -> {
-                month = "10"
-            }
-            "ноября" -> {
-                month = "11"
-            }
-            "декабря" -> {
-                month = "12"
-            }
+            "марта" -> month = "03"
+            "апреля" -> month = "04"
+            "мая" -> month = "05"
+            "июня" -> month = "06"
+            "июля" -> month = "07"
+            "августа" -> month = "08"
+            "сентября" -> month = "09"
+            "октября" -> month = "10"
+            "ноября" -> month = "11"
+            "декабря" -> month = "12"
             else -> return ""
         }
+        if ((month in listOf("01", "04", "06", "09", "11")) && (day == 31)) return ""
         return "${twoDigitStr(day)}.$month.$year"
     } catch (e: NumberFormatException) {
         return ""
     } catch (o: IndexOutOfBoundsException) {
         return ""
     }
-}
-fun main() {
-    print(dateStrToDigit("01 февраля 1"))
 }
 /**
  * Средняя (4 балла)
@@ -228,6 +205,7 @@ fun firstDuplicateIndex(str: String): Int {
 fun mostExpensive(description: String): String {
     if (description.length < 2) return ""
     val products = description.split(" ", "; ")
+    if (products.size < 2) return ""
     var currentPrice: Double
     var mostExpensive = ""
     var maxPrice = -999.0
@@ -245,7 +223,9 @@ fun mostExpensive(description: String): String {
     }
     return mostExpensive
 }
-
+fun main() {
+    print(mostExpensive("Хлеб"))
+}
 /**
  * Сложная (6 баллов)
  *
