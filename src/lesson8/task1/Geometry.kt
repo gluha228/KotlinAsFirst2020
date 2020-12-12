@@ -3,10 +3,8 @@
 package lesson8.task1
 
 import lesson1.task1.sqr
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.sqrt
+import java.lang.IllegalArgumentException
+import kotlin.math.*
 
 // Урок 8: простые классы
 // Максимальное количество баллов = 40 (без очень трудных задач = 11)
@@ -208,5 +206,48 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle = TODO()
  * три точки данного множества, либо иметь своим диаметром отрезок,
  * соединяющий две самые удалённые точки в данном множестве.
  */
-fun minContainingCircle(vararg points: Point): Circle = TODO()
+fun dist(p1: Point, p2: Point): Double = sqrt(sqr(p1.x - p2.x) + sqr(p1.y - p2.y))
 
+fun minContainingCircle(vararg points: Point): Circle {
+    if (points.isNullOrEmpty()) throw IllegalArgumentException()
+    var mostStrPts = Pair(points[0], points[0])
+    var maxR = 0.0
+    var r: Double
+    for (p1 in points)
+        for (p2 in points) {
+            r = dist(p1, p2)
+            if (dist(p1, p2) > maxR) {
+                mostStrPts = Pair(p1, p2)
+                maxR = r
+            }
+        }
+    val center = Point((mostStrPts.first.x + mostStrPts.second.x) / 2, (mostStrPts.first.y + mostStrPts.second.y) / 2)
+    var finalR = maxR / 2
+    var mostStrPt3 = mostStrPts.first
+    for (p in points) {
+        r = dist(p, center)
+        if (r > finalR) {
+            mostStrPt3 = p
+            finalR = r
+        }
+    }
+    if (finalR == maxR / 2) return Circle(center, finalR)
+    val p1 = mostStrPts.first
+    val p2 = mostStrPts.second
+    val p3 = mostStrPt3
+    val x =
+        (sqr(p2.x) + sqr(p2.y) - sqr(p3.x) - sqr(p3.y) - (p3.y - p2.y) * (sqr(p1.x) + sqr(p1.y) - sqr(p3.x) - sqr(p3.y)) / (p3.y - p1.y)) /
+                (-2 * (p3.x - p2.x - (p3.x - p1.x) * (p3.y - p2.y) / (p3.y - p1.y)))
+    val y = ((sqr(p1.x) + sqr(p1.y) - sqr(p3.x) - sqr(p3.y)) / (-2) - x * (p3.x - p1.x)) / (p3.y - p1.y)
+    //формулы выведены из системы уравнений для трех точек и центра окружности
+    return Circle(Point(x, y), dist(Point(x, y), p3))
+}
+fun main() {
+    val p1 = Point(0.0, 0.0)
+    val p2 = Point(1.0, 4.0)
+    val p3 = Point(-2.0, 2.0)
+    val p4 = Point(3.0, -1.0)
+    val p5 = Point(-3.0, -2.0)
+    val p6 = Point(0.0, 5.0)
+    print(minContainingCircle(p1, p2, p3, p4, p5, p6))
+}
