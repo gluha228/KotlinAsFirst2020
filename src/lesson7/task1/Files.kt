@@ -549,11 +549,12 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         }
         writer.write("$lhv | $rhv")
         writer.newLine()
-        for (x in 2..initialInterval) writer.write(" ")
-        writer.write(" -0   0")
+        for (x in 3..initialInterval) writer.write(" ")
+        writer.write("-0   0")
         writer.newLine()
         for (x in 1..initialInterval) writer.write("-")
         writer.newLine()
+        if (lhv < 10) writer.write(" ")
         writer.write("$lhv")
         writer.close()
         return
