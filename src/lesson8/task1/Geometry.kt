@@ -193,7 +193,23 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
  * (построить окружность по трём точкам, или
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
-fun circleByThreePoints(a: Point, b: Point, c: Point): Circle = TODO()
+fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
+    val p1 = a
+    var p2 = b
+    var p3 = c
+    val p: Point
+    if (sqr(p2.y - p1.y) > sqr(p3.y - p1.y)) { //защита ОДЗ
+        p = p3
+        p3 = p2
+        p2 = p
+    }
+    val x =
+        (sqr(p2.x) + sqr(p2.y) - sqr(p3.x) - sqr(p3.y) - (p3.y - p2.y) * (sqr(p1.x) + sqr(p1.y) - sqr(p3.x) - sqr(p3.y)) / (p3.y - p1.y)) /
+                (-2 * (p3.x - p2.x - (p3.x - p1.x) * (p3.y - p2.y) / (p3.y - p1.y)))
+    val y = ((sqr(p1.x) + sqr(p1.y) - sqr(p3.x) - sqr(p3.y)) / (-2) - x * (p3.x - p1.x)) / (p3.y - p1.y)
+    //формулы выведены из системы трех уравнений для точек и центра окружности
+    return Circle(Point(x, y), dist(Point(x, y), p3))
+}
 
 /**
  * Очень сложная (10 баллов)
@@ -236,13 +252,11 @@ fun minContainingCircle(vararg points: Point): Circle {
     var p2 = mostStrPts.second
     var p3 = mostStrPt3
     val p: Point
-    if (0.1 > (p3.y - p1.y)) { //защита ОДЗ
+    if (sqr(p2.y - p1.y) > sqr(p3.y - p1.y)) { //защита ОДЗ
         p = p3
         p3 = p2
         p2 = p
-        println("pass")
     }
-    println("$p1, $p2, $p3")
     val x =
         (sqr(p2.x) + sqr(p2.y) - sqr(p3.x) - sqr(p3.y) - (p3.y - p2.y) * (sqr(p1.x) + sqr(p1.y) - sqr(p3.x) - sqr(p3.y)) / (p3.y - p1.y)) /
                 (-2 * (p3.x - p2.x - (p3.x - p1.x) * (p3.y - p2.y) / (p3.y - p1.y)))
