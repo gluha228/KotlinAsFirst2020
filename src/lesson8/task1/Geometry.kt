@@ -236,7 +236,7 @@ fun minContainingCircle(vararg points: Point): Circle {
     var p2 = mostStrPts.second
     var p3 = mostStrPt3
     val p: Point
-    if (0.0 == (p3.y - p1.y)) { //защита одз
+    if (0.0 == (p3.y - p1.y)) { //защита ОДЗ
         p = p3
         p3 = p2
         p2 = p
