@@ -233,8 +233,15 @@ fun minContainingCircle(vararg points: Point): Circle {
     }
     if (finalR == maxR / 2) return Circle(center, finalR)
     val p1 = mostStrPts.first
-    val p2 = mostStrPts.second
-    val p3 = mostStrPt3
+    var p2 = mostStrPts.second
+    var p3 = mostStrPt3
+    val p: Point
+    if (0.0 == (p3.y - p1.y)) { //защита одз
+        p = p3
+        p3 = p2
+        p2 = p
+    }
+    println("$p1, $p2, $p3")
     val x =
         (sqr(p2.x) + sqr(p2.y) - sqr(p3.x) - sqr(p3.y) - (p3.y - p2.y) * (sqr(p1.x) + sqr(p1.y) - sqr(p3.x) - sqr(p3.y)) / (p3.y - p1.y)) /
                 (-2 * (p3.x - p2.x - (p3.x - p1.x) * (p3.y - p2.y) / (p3.y - p1.y)))
@@ -243,11 +250,16 @@ fun minContainingCircle(vararg points: Point): Circle {
     return Circle(Point(x, y), dist(Point(x, y), p3))
 }
 fun main() {
-    val p1 = Point(0.0, 0.0)
-    val p2 = Point(1.0, 4.0)
-    val p3 = Point(-2.0, 2.0)
-    val p4 = Point(3.0, -1.0)
-    val p5 = Point(-3.0, -2.0)
-    val p6 = Point(0.0, 5.0)
-    print(minContainingCircle(p1, p2, p3, p4, p5, p6))
+    val p1 = Point(0.622712733448195, -2.220446049250313e-16)
+    val p2 = Point(0.5081885234670233, -632.0)
+    val p3 = Point(-2.220446049250313e-16, 0.5789480560660792)
+    val p4 = Point(5e-324, -632.0)
+    val p5 = Point(0.09150159986613915, 0.923465474323828)
+    val p6 = Point(0.33429438239690024, 0.7106724797565985)
+    val p7 = Point(-632.0, -632.0)
+    val p8 = Point(0.7697533721126752, 0.2998166864452111)
+    val p9 = Point(0.4165691546004022, 0.9424476666158039)
+    val p10 = Point(-632.0, 0.10951203116331487)
+    val p11 = Point(-632.0, -632.0)
+    print(minContainingCircle(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11))
 }
