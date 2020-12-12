@@ -542,6 +542,18 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     var minuInterval: Int
     var correctingSpace = ""
     val writer = File(outputName).bufferedWriter()
+    if (lhv < rhv) {
+        writer.write("$lhv | $rhv")
+        writer.newLine()
+        for (x in 2..initialInterval) writer.write(" ")
+        writer.write(" -0   0")
+        writer.newLine()
+        for (x in 1..initialInterval) writer.write("-")
+        writer.newLine()
+        writer.write("$lhv")
+        writer.close()
+        return
+    }
     var remain: Int
     var delimeter = DigitsNumber(currentLhv).first
     if (!((lhv != rhv) && (rhv < lhv) && ((lhv / delimeter) == 1) && (rhv > (lhv / 2)))) correctingSpace = " "
