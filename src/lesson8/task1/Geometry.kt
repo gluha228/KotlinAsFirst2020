@@ -248,41 +248,11 @@ fun minContainingCircle(vararg points: Point): Circle {
         }
     }
     if (finalR == maxR / 2) return Circle(center, finalR)
-    val p1 = mostStrPts.first
-    var p2 = mostStrPts.second
-    var p3 = mostStrPt3
-    val p: Point
-    if (sqr(p2.y - p1.y) > sqr(p3.y - p1.y)) { //защита ОДЗ
-        p = p3
-        p3 = p2
-        p2 = p
-    }
-    val x =
-        (sqr(p2.x) + sqr(p2.y) - sqr(p3.x) - sqr(p3.y) - (p3.y - p2.y) * (sqr(p1.x) + sqr(p1.y) - sqr(p3.x) - sqr(p3.y)) / (p3.y - p1.y)) /
-                (-2 * (p3.x - p2.x - (p3.x - p1.x) * (p3.y - p2.y) / (p3.y - p1.y)))
-    val y = ((sqr(p1.x) + sqr(p1.y) - sqr(p3.x) - sqr(p3.y)) / (-2) - x * (p3.x - p1.x)) / (p3.y - p1.y)
-    //формулы выведены из системы трех уравнений для точек и центра окружности
-    return Circle(Point(x, y), dist(Point(x, y), p3))
+    return circleByThreePoints(mostStrPts.first, mostStrPts.second, mostStrPt3)
 }
 
 fun main() {
     val p1 = Point(0.43169784764188057, 2.220446049250313e-16)
     val p2 = Point(0.0, 2.220446049250313e-16)
-    val p3 = Point(-5e-324, 0.4696487070133115)
-    val p4 = Point(2.220446049250313e-16, 0.6670906440450606)
-    val p5 = Point(0.43208612978953054, 5e-324)
-    val p6 = Point(0.7420051090801372, -2.220446049250313e-16)
-    val p7 = Point(0.456755932023277, 5e-324)
-    val p8 = Point(0.6394327366291884, 0.13730547633456047)
-    val p9 = Point(0.0, 0.3148871349893262)
-    val p10 = Point(0.8808318245209669, 0.06478528905112957)
-    val p11 = Point(0.2552527515760382, 0.07242316055966347)
-    val p12 = Point(-632.0, -2.220446049250313e-16)
-    val p13 = Point(0.6533834399051817, -632.0)
-    val p14 = Point(-2.220446049250313e-16, 0.0)
-    val p15 = Point(-5e-324, -632.0)
-    val p16 = Point(-2.220446049250313e-16, 0.3798564052942752)
-    val p17 = Point(0.9827898996053093, 0.0)
-    val p18 = Point(0.28807159793969306, 0.6338661130983828)
-    print(minContainingCircle(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18))
+    print(minContainingCircle(p1, p2, ))
 }
