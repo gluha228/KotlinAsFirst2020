@@ -281,7 +281,7 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 </html>
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
- */
+ **/
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     val opened = mutableListOf('p')
