@@ -286,7 +286,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     val opened = mutableListOf('p')
     var skip = 0
-    var lastEmpty = 0
+    var lastEmpty = 1
     writer.write("<html>")
     writer.newLine()
     writer.write("<body>")
