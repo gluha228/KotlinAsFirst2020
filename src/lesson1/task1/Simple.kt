@@ -3,6 +3,7 @@
 package lesson1.task1
 
 import kotlin.math.*
+import java.io.File
 
 /**
  * Пример
@@ -123,3 +124,67 @@ fun accountInThreeYears(initial: Int, percent: Int): Double =
  */
 fun numberRevert(number: Int): Int = (number % 10) * 100 + ((number / 10) % 10) * 10 + number / 100
 
+data class Point(var x: Int, var y: Int)
+
+fun labyrinth(inputFile: String): Int {
+    var x = 0
+    var y: Int
+    var cam = Point(0, 0)
+    val available = mutableSetOf<Point>()
+    for (str in File(inputFile).readLines()) {
+        x += 1
+        y = 0
+        for (chars in str) {
+            y += 1
+            if (chars == 'C') cam = Point(x, y)
+            else if (chars == '.') available += Point(x, y)
+        }
+    }
+    available += cam
+    var visiblePoints = 0
+    var currentPoint = Point(cam.x, cam.y)       //нельзя просто присваивать cam,
+    while (currentPoint in available) {  //вверх //так как из-за одинковых адресов
+        visiblePoints += 1                       //меняется содержимое обеих переменных
+        currentPoint.x += 1
+    }
+    currentPoint = Point(cam.x, cam.y)
+    while (currentPoint in available) {  //вниз
+        visiblePoints += 1
+        currentPoint.x -= 1
+    }
+    currentPoint = Point(cam.x, cam.y)
+    while (currentPoint in available) {  //влево
+        visiblePoints += 1
+        currentPoint.y += 1
+    }
+    currentPoint = Point(cam.x, cam.y)
+    while (currentPoint in available) {  //вправо
+        visiblePoints += 1
+        currentPoint.y -= 1
+    }
+    currentPoint = Point(cam.x, cam.y)
+    while (currentPoint in available) {  //наискосок
+        visiblePoints += 1
+        currentPoint.x += 1
+        currentPoint.y += 1
+    }
+    currentPoint = Point(cam.x, cam.y)
+    while (currentPoint in available) {
+        visiblePoints += 1
+        currentPoint.x += 1
+        currentPoint.y -= 1
+    }
+    currentPoint = Point(cam.x, cam.y)
+    while (currentPoint in available) {
+        visiblePoints += 1
+        currentPoint.x -= 1
+        currentPoint.y += 1
+    }
+    currentPoint = Point(cam.x, cam.y)
+    while (currentPoint in available) {
+        visiblePoints += 1
+        currentPoint.x -= 1
+        currentPoint.y -= 1
+    }
+    return visiblePoints - 8  //на каждое из 8-ми направлений добалялась точка самой камеры
+}

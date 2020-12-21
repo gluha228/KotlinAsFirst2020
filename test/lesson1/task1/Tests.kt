@@ -105,4 +105,33 @@ class Tests {
         assertEquals(874, numberRevert(478))
         assertEquals(201, numberRevert(102))
     }
+
+    @Test
+    @Tag("0")
+    fun labyrinth() {
+        assertEquals(
+            8,
+            labyrinth("input/labyrinth_in1.txt")
+        )
+        assertEquals(
+            0,
+            labyrinth("input/labyrinth_in2.txt")
+        )
+        assertEquals(
+            0,
+            labyrinth("input/labyrinth_in3.txt")
+        )
+        assertEquals(
+            26,
+            labyrinth("input/labyrinth_in4.txt")
+        )
+        assertEquals(
+            39,
+            labyrinth("input/labyrinth_in5.txt")
+        )
+        assertEquals(
+            24,
+            labyrinth("input/labyrinth_in6.txt")
+        )
+    }
 }
