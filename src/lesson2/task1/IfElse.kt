@@ -2,8 +2,10 @@
 
 package lesson2.task1
 
+import kotlinx.html.InputType
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
+import java.io.File
 import kotlin.math.max
 import kotlin.math.sqrt
 
@@ -173,3 +175,78 @@ else if ((c >= a) && (c <= b) && (b >= d)) d - c
 else if ((c >= a) && (c <= b) && (b <= d)) b - c
 else -1
 
+
+fun ticTacToe(inputName: String, moveOf: Char): Pair<Int, Int>? {
+    val field = mutableListOf<MutableList<Char>>()
+    var str = mutableListOf<Char>()
+    for (x in 0..16) str.plusAssign('*')
+    field.plusAssign(str)
+    for (s in File(inputName).readLines()) {          //считывание
+        str = mutableListOf('*')
+        for (x in 1..15) str.plusAssign(s[x - 1])
+        str.plusAssign('*')
+        field.plusAssign(str)
+    }
+    str = mutableListOf<Char>()
+    for (x in 0..16) str.plusAssign('*')
+    field.plusAssign(str)
+    //из '*' сделано заграждение для удобства вокруг поля
+    var count: Int
+    var currentCount: Int
+    var currntX: Int
+    var currntY: Int
+    var emptyPlace: Pair<Int, Int>
+
+    //функция проверки 5-ти ячеек по заданному с помощью addX и addY напрвлению
+    fun check(xx: Int, yy: Int, addX: Int, addY: Int): Pair<Int, Int>? {
+        count = 0
+        currentCount = 0
+        currntX = xx
+        currntY = yy
+        emptyPlace = Pair(0, 0)
+        while ((field[currntX][currntY] == '.') || (field[currntX][currntY] == moveOf)) {
+            currentCount += 1
+            if (currentCount == 6) break  //чтобы проверило только 5 ячеек
+            //если на отрезке встетится более одной пустой ячейки, то искать больше нет смысла:
+            if ((emptyPlace != Pair(0, 0)) && (field[currntX][currntY] == '.')) break
+            //если это первая пустая ячейка, то сохраняем её координаты
+            if (field[currntX][currntY] == '.') emptyPlace = Pair(currntX, currntY)
+            currntX += addX //следующая ячейка отрезка
+            currntY += addY
+            count += 1
+            //если проходит 5 ячеек, не встретив более 1-й пустой ячейки и ни одной
+            if (count == 5) return emptyPlace
+        }
+        return null
+    }
+
+    var resolve: Pair<Int, Int>?
+    for (x in 1..15)
+        for (y in 1..15) if (field[x][y] != '0') {
+            //проверка вниз
+            resolve = check(x, y, 1, 0)
+            if (resolve != null) return resolve
+            //проверка вверх
+            resolve = check(x, y, -1, 0)
+            if (resolve != null) return resolve
+            //проверка вправо
+            resolve = check(x, y, 0, 1)
+            if (resolve != null) return resolve
+            //проверка влево
+            resolve = check(x, y, 0, -1)
+            if (resolve != null) return resolve
+            //далее- проверки наискосок
+            resolve = check(x, y, 1, 1)
+            if (resolve != null) return resolve
+
+            resolve = check(x, y, 1, -1)
+            if (resolve != null) return resolve
+
+            resolve = check(x, y, -1, 1)
+            if (resolve != null) return resolve
+
+            resolve = check(x, y, -1, -1)
+            if (resolve != null) return resolve
+        }
+    return null //если ни разу не нашелся "победный" отрезок, то победить в 1 ход невозможно
+}

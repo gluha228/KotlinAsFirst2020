@@ -88,4 +88,10 @@ class Tests {
         assertEquals(1, segmentLength(3, 6, 1, 4))
         assertEquals(4, segmentLength(1, 15, 10, 14))
     }
+    @Test
+    @Tag("0")
+    fun ticTacToe() {
+        assertEquals(Pair(3, 4), ticTacToe("input/ticTacToe_in1.txt", 'X'))
+
+    }
 }
